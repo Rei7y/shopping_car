@@ -4,9 +4,83 @@
     <meta charset="UTF-8">
     <title>購物車</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #81d8d0;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        input[type="checkbox"] {
+            transform: scale(1.2);
+        }
+
+        button, .increase, .decrease, .delete {
+            background-color: #81d8d0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover, .increase:hover, .decrease:hover, .delete:hover {
+            background-color: #68b9b0;
+        }
+
+        .quantity {
+            width: 50px;
+            text-align: center;
+        }
+
+        #checkout {
+            margin-top: 20px;
+            width: 100%;
+            font-size: 1.2em;
+        }
+
+        #totalPrice {
+            font-weight: bold;
+            color: #81d8d0;
+        }
+    </style>
 </head>
 <body>
-<?php require_once 'nav.php'; ?>
+    <?php require_once 'nav.php'; ?>
     
     <h1>我的購物車</h1>
 
@@ -22,7 +96,6 @@
             </tr>
         </thead>
         <tbody>
-            <!-- 購物車商品將會動態添加到這裡 -->
         </tbody>
     </table>
 
@@ -30,19 +103,17 @@
     <button id="checkout">結帳選擇的商品</button>
 
     <script>
-        // 載入購物車
         function loadCart() {
             $.ajax({
                 url: 'load_cart.php',
                 method: 'GET',
                 success: function(response) {
                     $('#cart tbody').html(response);
-                    updateTotalPrice(); // 每次載入購物車後更新總金額
+                    updateTotalPrice();
                 }
             });
         }
 
-        // 更新購物車顯示並更新總金額
         function updateCart(action, p_no, quantity) {
             $.ajax({
                 url: 'update_cart.php',
@@ -54,11 +125,10 @@
             });
         }
 
-        // 計算並更新總金額
         function updateTotalPrice() {
             var total = 0;
             $('#cart tbody tr').each(function() {
-                if ($(this).find('.item-select').is(':checked')) { // 只計算選中的商品
+                if ($(this).find('.item-select').is(':checked')) {
                     var price = parseFloat($(this).find('.price').text());
                     var quantity = parseInt($(this).find('.quantity').val());
                     total += price * quantity;
@@ -67,19 +137,16 @@
             $('#totalPrice').text(total);
         }
 
-        // 增加商品數量
         $(document).on('click', '.increase', function() {
             var p_no = $(this).data('pno');
             updateCart('increase', p_no, 1);
         });
 
-        // 減少商品數量
         $(document).on('click', '.decrease', function() {
             var p_no = $(this).data('pno');
             updateCart('decrease', p_no, 1);
         });
 
-        // 直接修改商品數量
         $(document).on('input', '.quantity', function() {
             var p_no = $(this).data('pno');
             var newQuantity = parseInt($(this).val());
@@ -90,24 +157,20 @@
             }
         });
 
-        // 刪除商品
         $(document).on('click', '.delete', function() {
             var p_no = $(this).data('pno');
             updateCart('delete', p_no, 0);
         });
 
-        // 全選/取消全選
         $('#selectAll').on('change', function() {
             $('.item-select').prop('checked', this.checked);
-            updateTotalPrice(); // 全選時更新總金額
+            updateTotalPrice();
         });
 
-        // 計算選擇的商品總金額
         $('#cart').on('change', '.item-select', function() {
-            updateTotalPrice(); // 當用戶選擇或取消選擇商品時，更新總金額
+            updateTotalPrice();
         });
 
-        // 結帳選擇的商品
         $('#checkout').on('click', function() {
             var selectedTotal = 0;
             var selectedItems = [];
@@ -119,30 +182,4 @@
                 var quantity = parseInt(row.find('.quantity').val());
 
                 selectedTotal += price * quantity;
-                selectedItems.push({
-                    p_no: p_no,
-                    quantity: quantity
-                });
-            });
-
-            if (selectedTotal > 0) {
-                // 確認結帳，刪除選擇的商品並刷新頁面
-                $.ajax({
-                    url: 'checkout.php',
-                    method: 'POST',
-                    data: { items: selectedItems },
-                    success: function(response) {
-                        alert('結帳成功！總金額：' + selectedTotal + ' 元');
-                        location.reload(); // 刷新頁面
-                    }
-                });
-            } else {
-                alert('請選擇至少一件商品進行結帳');
-            }
-        });
-
-        // 初始化購物車
-        loadCart();
-    </script>
-</body>
-</html>
+                selected
