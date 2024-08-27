@@ -4,12 +4,69 @@
     <meta charset="UTF-8">
     <title>商品列表</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        
+        h1 {
+            color: #4db6ac;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #66bfbf;
+            color: white;
+        }
+
+        table tr:hover {
+            background-color: #e0f7fa;
+        }
+
+        input[type="number"] {
+            padding: 5px;
+            width: 60px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        button {
+            padding: 8px 15px;
+            background-color: #4db6ac;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #388e8e;
+        }
+    </style>
 </head>
 <body>
 <?php require_once 'nav.php'; ?>
     <h1>商品列表</h1>
 
-    <table border="1">
+    <table>
         <thead>
             <tr>
                 <th>商品名稱</th>
@@ -40,7 +97,6 @@
     </table>
 
     <script>
-        // 新增至購物車
         $(document).on('click', '.add-to-cart', function() {
             var p_no = $(this).data('pno');
             var quantity = $('#quantity_' + p_no).val();
